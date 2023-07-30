@@ -4,20 +4,25 @@ async function run() {
     const browser = await puppeteer.launch({executablePath: '/usr/bin/google-chrome'});
     const page = await browser.newPage();
     
-    await page.goto('https://www.reddit.com/r/javascript/');
+    await page.goto('https://www.reddit.com/r/depression/top/?t=all');
     
-    const result = await page.evaluate(() => {
-        let title = document.querySelector('h3._eYtD2XCVieq6emjKBH3m').innerText; // innetText / textContent
-        let url = document.querySelector('a._2INHSNB8V5eaWp4P0rY_mE').href;
-        return {title, url};
+    const results = await page.evaluate(() => {
+        let posts = document.querySelectorAll('div._2FCtq-QzlfuN-SwVMUZMM3'); // Selects all posts
+        let results = [];
+        posts.forEach((post) => {
+            try {
+                let title = post.querySelector('h3').innerText;
+                let url = post.querySelector('a').href;
+                results.push({title, url});
+            } catch (err) {
+                console.log('Skipping a post due to missing information');
+            }
+        });
+        return results;
     })
-    .catch(() => {
-        console.log('again...');
-        run();
-    });
     
-    console.log(result);
-    
+    console.log(results);
+    console.log(`Number of posts: ${results.length}`);
     browser.close();
 }
 
