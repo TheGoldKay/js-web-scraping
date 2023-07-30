@@ -1,25 +1,21 @@
-const puppeteer = require('puppeteer');
+const axios = require('axios');
+const cheerio = require('cheerio');
 
 async function run() {
-    const browser = await puppeteer.launch({executablePath: '/usr/bin/google-chrome'});
-    const page = await browser.newPage();
-    await page.goto('https://www.tgstorytime.com/browse.php?type=titles&offset=0');
-    //let html = await page.content();
-    //console.log(html);      
-    await page.waitForSelector('.listboxtop');
-    const data = await page.evaluate(() => {
-        let elements = Array.from(document.querySelectorAll('.listboxtop'));
-        const dataList = [];
-        elements.forEach(element => {
-          // Example: Get the 'title' attribute of each div with class 'listboxtop'
-          const titleAttribute = element.getAttribute('.title');
-          dataList.push(titleAttribute);
-        });
-    
-        return dataList;
-      });
-    console.log(data[0]);
-    browser.close();
+  try {
+    const response = await axios.get('https://www.tgstorytime.com/browse.php?type=titles&offset=0');
+    const html = response.data;
+
+    // Load the HTML content into Cheerio
+    const $ = cheerio.load(html);
+
+    // Select all elements with the class 'listboxtop' and get their text content
+    //const data = $('.listbox').map((index, element) => $(element).text()).get();
+    const novels = $('.listbox');
+    console.log($($(novels.eq(127)).find('.title')).eq(1).text());
+  } catch (error) {
+    console.error('Error:', error.message);
+  }
 }
 
 run();
