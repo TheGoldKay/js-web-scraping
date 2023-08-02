@@ -1,2 +1,2 @@
 # js-web-scraping
-Scraping the web with javascript and puppeteer
+Scraping the web with javascript: Puppeteer, Cheerio.

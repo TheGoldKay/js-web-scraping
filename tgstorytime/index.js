@@ -11,8 +11,12 @@ async function run() {
 
     // Select all elements with the class 'listboxtop' and get their text content
     //const data = $('.listbox').map((index, element) => $(element).text()).get();
+    /*
     const novels = $('.listbox');
     console.log($($(novels.eq(127)).find('.title')).eq(1).text());
+    */
+    const novels = $('div.listboxtop');
+    console.log(novels.eq(0).text());
   } catch (error) {
     console.error('Error:', error.message);
   }
